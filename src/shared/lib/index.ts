@@ -1,4 +1,12 @@
-export { createBaseSelector, registerSlice } from "./redux";
+export {
+  createBaseSelector,
+  registerSlice,
+  useAppDispatch,
+  useAppSelector,
+  useActionWithDeps,
+  useAction,
+  store,
+} from "./redux";
 
 export { persistStorage } from "./persist-storage";
 
@@ -8,4 +16,5 @@ export {
   useStrictContext,
   createStrictContext,
   useAppearanceDelay,
+  ComposeChildren,
 } from "./react";

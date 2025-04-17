@@ -5,15 +5,16 @@ import {
   nanoid,
 } from "@reduxjs/toolkit";
 import { transactionRepository } from "./transaction.repository";
-import { Transaction, TransactionId } from "./types";
+import { CreateTransactionData, TransactionPartial } from "./types";
 import { createBaseSelector, registerSlice } from "@/shared/lib";
+import { TransactionTypeEnum } from "./const";
 
 export type TransactionStore = {
-  currentTransaction?: Transaction;
+  transactions: TransactionPartial[];
 };
 
 const initialState: TransactionStore = {
-  currentTransaction: undefined,
+  transactions: [],
 };
 
 const transactionSlice = createSlice({
@@ -22,11 +23,17 @@ const transactionSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(loadTransaction.fulfilled, (state, action) => {
-      state.currentTransaction = action.payload;
+      state.transactions = action.payload;
     });
 
-    builder.addCase(removeTransaction.fulfilled, (state) => {
-      // state.currentTransaction();
+    builder.addCase(createTransaction.fulfilled, (state, action) => {
+      state.transactions.push(action.payload);
+    });
+
+    builder.addCase(removeTransaction.fulfilled, (state, action) => {
+      state.transactions = state.transactions.filter(
+        (transaction) => transaction.id !== action.payload
+      );
     });
   },
 });
@@ -39,24 +46,59 @@ const loadTransaction = createAsyncThunk(
   }
 );
 
-const removeTransaction = createAsyncThunk(
-  "transaction/removeTransaction",
-  async (id: TransactionId) => {
-    await transactionRepository.removeTransaction(id);
-    return;
-  }
-);
-
 const createTransaction = createAsyncThunk(
   "transaction/createTransaction",
-  async (data: Transaction) => {
-    const newTransaction = { ...data, id: nanoid() as TransactionId };
+  async (data: CreateTransactionData) => {
+    const newTransaction = {
+      ...data,
+      date: new Date().toLocaleString(),
+      id: nanoid(),
+    };
     await transactionRepository.addTransaction(newTransaction);
-    return;
+    return newTransaction;
   }
 );
 
-const baseSelector = createBaseSelector(transactionSlice);
+const removeTransaction = createAsyncThunk(
+  "transaction/removeTransaction",
+  async (transactionId: string) => {
+    await transactionRepository.removeTransaction(transactionId);
+    return transactionId;
+  }
+);
+
+const transactionsBaseSelector = createBaseSelector(transactionSlice);
+
+const selectTransactions = createSelector(
+  transactionsBaseSelector,
+  (s) => s.transactions
+);
+
+const selectTransactionTotalIncome = createSelector(
+  selectTransactions,
+  (transactions) =>
+    transactions.reduce((acc, curr) => {
+      const amount = parseFloat(curr.amount);
+      if (curr.type === TransactionTypeEnum.INCOME) return (acc += amount);
+      return acc;
+    }, 0)
+);
+
+const selectTransactionTotalExpense = createSelector(
+  selectTransactions,
+  (transactions) =>
+    transactions.reduce((acc, curr) => {
+      const amount = parseFloat(curr.amount);
+      if (curr.type === TransactionTypeEnum.EXPENSE) return (acc += amount);
+      return acc;
+    }, 0)
+);
+
+const selectTransactionBalance = createSelector(
+  selectTransactionTotalIncome,
+  selectTransactionTotalExpense,
+  (income, expense) => (income - expense).toFixed(2)
+);
 
 registerSlice([transactionSlice]);
 
@@ -67,6 +109,9 @@ export const transactionStore = {
     createTransaction,
   },
   selectors: {
-    selectTransition: createSelector(baseSelector, (s) => s.currentTransaction),
+    selectTransactions,
+    selectTransactionTotalIncome,
+    selectTransactionTotalExpense,
+    selectTransactionBalance,
   },
 };

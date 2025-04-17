@@ -1,12 +1,26 @@
-export type TransactionType = "income" | "expense";
+import { TransactionTypeEnum } from "./const";
 
-export type TransactionId = Brand<UniqId, "TransactionId">;
+export type TransactionType =
+  (typeof TransactionTypeEnum)[keyof typeof TransactionTypeEnum];
 
 export type Transaction = {
-  id: TransactionId;
-  amount: number;
-  category: string;
-  date: Date;
-  description: string;
+  id: string;
+  amount: string;
+  date: string;
   type: TransactionType;
+  description?: string;
+};
+
+export type TransactionPartial = {
+  id: string;
+  amount: string;
+  date: string;
+  type: TransactionType;
+  description?: string;
+};
+
+export type CreateTransactionData = {
+  amount: string;
+  type: TransactionType;
+  description?: string;
 };

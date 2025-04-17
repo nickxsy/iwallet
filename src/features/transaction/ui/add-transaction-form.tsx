@@ -13,31 +13,40 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { AddTransactionIncomeButton } from "./add-transaction-income-button";
 import { AddTransactionExpenseButton } from "./add-transaction-expense-button";
+import { useCreateTransaction } from "../model/use-create-transaction";
+import { TransactionTypeEnum } from "@/entities/transaction/model/const";
+import { Switch } from "@/shared/ui/switch";
 
 const formSchema = z.object({
-  amount: z.number().min(1, {
+  amount: z.string().min(1, {
     message: "Username must be at least 2 characters.",
   }),
   description: z.string().min(1, {
     message: "Username must be at least 2 characters.",
   }),
+  type: z.nativeEnum(TransactionTypeEnum),
 });
 
 export const AddIncomeForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      amount: "",
       description: "",
+      type: TransactionTypeEnum.EXPENSE,
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
+  const { createTransaction } = useCreateTransaction();
+
+  const onSubmit = form.handleSubmit((data) => {
+    console.log(data);
+    createTransaction(data);
+  });
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={onSubmit} className="space-y-8">
         <FormField
           control={form.control}
           name="amount"
@@ -45,7 +54,7 @@ export const AddIncomeForm = () => {
             <FormItem>
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                <Input placeholder="$0.00" {...field} />
+                <Input type="number" placeholder="$0.00" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name.
@@ -67,6 +76,27 @@ export const AddIncomeForm = () => {
                 This is your public display name.
               </FormDescription>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="type"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Type</FormLabel>
+              <FormControl>
+                <Switch
+                  checked={field.value === TransactionTypeEnum.INCOME}
+                  onCheckedChange={(checked) =>
+                    field.onChange(
+                      checked
+                        ? TransactionTypeEnum.INCOME
+                        : TransactionTypeEnum.EXPENSE
+                    )
+                  }
+                />
+              </FormControl>
             </FormItem>
           )}
         />
