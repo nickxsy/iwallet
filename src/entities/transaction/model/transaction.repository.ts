@@ -1,7 +1,8 @@
-import { persistStorage } from "@/shared/lib";
-import { Transaction, TransactionPartial } from "./types";
+import { persistStorage } from '@/shared/lib';
 
-const TRANSACTION_STORAGE_KEY = "transaction_key";
+import { Transaction, TransactionPartial } from './types';
+
+const TRANSACTION_STORAGE_KEY = 'transaction_key';
 
 class TransactionRepository {
   async getTransactions(): Promise<TransactionPartial[]> {
@@ -14,15 +15,15 @@ class TransactionRepository {
   async getTransactionById(id: string): Promise<Transaction | undefined> {
     return persistStorage
       .getItemSafe<Transaction[]>(TRANSACTION_STORAGE_KEY, [])
-      .then((transactions) =>
-        transactions.find((transaction) => transaction.id === id)
+      .then(transactions =>
+        transactions.find(transaction => transaction.id === id)
       );
   }
 
   async addTransaction(data: Transaction) {
     const transactions = await this.getTransactions();
     const transactionIndex = transactions.findIndex(
-      (transaction) => transaction.id === data.id
+      transaction => transaction.id === data.id
     );
 
     if (transactionIndex === -1) {
@@ -39,7 +40,7 @@ class TransactionRepository {
 
     await persistStorage.setItemSafe(
       TRANSACTION_STORAGE_KEY,
-      transactions.filter((transaction) => transaction.id !== id)
+      transactions.filter(transaction => transaction.id !== id)
     );
   }
 }

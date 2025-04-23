@@ -1,8 +1,9 @@
+import { useAppDispatch } from '@/shared/lib';
+
 import {
   CreateTransactionData,
-  transactionStore,
-} from "@/entities/transaction";
-import { useAppDispatch } from "@/shared/lib";
+  transactionStore
+} from '@/entities/transaction';
 
 export const useCreateTransaction = () => {
   const dispatch = useAppDispatch();

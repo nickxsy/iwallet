@@ -7,12 +7,12 @@ import {
   startTransition,
   useContext,
   useEffect,
-  useState,
-} from "react";
+  useState
+} from 'react';
 
 export function useStrictContext<T>(context: Context<T | null>) {
   const value = useContext(context);
-  if (value === null) throw new Error("Strict context not passed");
+  if (value === null) throw new Error('Strict context not passed');
   return value as T;
 }
 
@@ -31,7 +31,7 @@ export function useAppearanceDelay(
   const {
     minDisplay = 500,
     defaultValue = false,
-    appearenceDelay = 500,
+    appearenceDelay = 500
   } = options;
 
   const [delayedShow, setDelayedShow] = useState(defaultValue);
@@ -54,7 +54,7 @@ export function useAppearanceDelay(
 }
 
 export const ComposeChildren = ({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) => {

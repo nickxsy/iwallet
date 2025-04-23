@@ -1,4 +1,4 @@
 export const TransactionTypeEnum = {
-  INCOME: "INCOME",
-  EXPENSE: "EXPENSE",
+  INCOME: 'INCOME',
+  EXPENSE: 'EXPENSE'
 } as const;

@@ -1,17 +1,26 @@
-import { Button } from "@/shared/ui/button";
-import { useRemoveTransaction } from "../model/use-remove-transaction";
-import { TransactionPartial } from "@/entities/transaction";
+import { Trash } from 'lucide-react';
+
+import { Button } from '@/shared/ui/button';
+
+import { TransactionPartial } from '@/entities/transaction';
+
+import { useRemoveTransaction } from '../model/hooks/use-remove-transaction';
 
 export const RemoveTransactionButton = ({
-  transaction,
+  transaction
 }: {
   transaction: TransactionPartial;
 }) => {
   const removeTransaction = useRemoveTransaction();
 
   return (
-    <Button onClick={() => removeTransaction(transaction)} variant="outline">
-      Remove
+    <Button
+      type="button"
+      className="size-10"
+      onClick={() => removeTransaction(transaction)}
+      variant="outline"
+    >
+      <Trash />
     </Button>
   );
 };

@@ -1,5 +1,6 @@
-import { ComposeChildren, store } from "@/shared/lib";
-import { Provider } from "react-redux";
+import { Provider } from 'react-redux';
+
+import { ComposeChildren, store } from '@/shared/lib';
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   return (

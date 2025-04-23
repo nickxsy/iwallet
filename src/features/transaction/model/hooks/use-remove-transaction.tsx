@@ -1,9 +1,9 @@
-import {
-  transactionStore,
-  type TransactionPartial,
-} from "@/entities/transaction";
+import { useAppDispatch } from '@/shared/lib';
 
-import { useAppDispatch } from "@/shared/lib";
+import {
+  type TransactionPartial,
+  transactionStore
+} from '@/entities/transaction';
 
 export const useRemoveTransaction = () => {
   const dispatch = useAppDispatch();

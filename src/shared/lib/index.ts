@@ -5,16 +5,16 @@ export {
   useAppSelector,
   useActionWithDeps,
   useAction,
-  store,
-} from "./redux";
+  store
+} from './redux';
 
-export { persistStorage } from "./persist-storage";
+export { persistStorage } from './persist-storage';
 
-export { cn } from "./utils";
+export { cn, sleep } from './utils';
 
 export {
   useStrictContext,
   createStrictContext,
   useAppearanceDelay,
-  ComposeChildren,
-} from "./react";
+  ComposeChildren
+} from './react';

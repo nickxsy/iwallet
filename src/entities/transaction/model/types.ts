@@ -1,4 +1,4 @@
-import { TransactionTypeEnum } from "./const";
+import { TransactionTypeEnum } from './const';
 
 export type TransactionType =
   (typeof TransactionTypeEnum)[keyof typeof TransactionTypeEnum];
