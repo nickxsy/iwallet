@@ -21,6 +21,7 @@ export type TransactionPartial = {
 
 export type CreateTransactionData = {
   amount: string;
+  date: string;
   type: TransactionType;
   description?: string;
 };

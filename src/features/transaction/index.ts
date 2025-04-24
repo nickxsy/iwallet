@@ -1,4 +1,4 @@
-export { ChartTransaction } from './ui/chart-transaction';
-export { FooterTransaction } from './ui/footer-transaction';
-export { TransactionList } from './ui/transaction-list';
-export { ModalTransaction } from './ui/modal-transaction';
+export { GlobalTransactionModal } from './public/global-modal';
+export { ChartTransaction } from './public/chart-transaction';
+export { FooterTransaction } from './public/footer-transaction';
+export { TransactionList } from './public/transaction-list';

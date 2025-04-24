@@ -7,13 +7,26 @@ import {
 
 import { createBaseSelector, registerSlice } from '@/shared/lib';
 
-import { TransactionTypeEnum } from './const';
-import { transactionRepository } from './transaction.repository';
+import { TransactionTypeEnum } from '../const';
+import { transactionRepository } from '../transaction.repository';
 import {
   CreateTransactionData,
   TransactionPartial,
   UpdateTransactionData
-} from './types';
+} from '../types';
+
+type GroupedTransactions = Record<string, TransactionPartial[]>;
+
+export const groupTransactionsByDate = (
+  transactions: TransactionPartial[]
+): GroupedTransactions => {
+  return transactions.reduce((acc, transaction) => {
+    const date = transaction.date.split(',')[0];
+    if (!acc[date]) acc[date] = [];
+    acc[date].push(transaction);
+    return acc;
+  }, {} as GroupedTransactions);
+};
 
 export type TransactionStore = {
   transactions: TransactionPartial[];
@@ -33,7 +46,7 @@ const transactionSlice = createSlice({
     });
 
     builder.addCase(createTransaction.fulfilled, (state, action) => {
-      state.transactions.push(action.payload);
+      state.transactions.unshift(action.payload);
     });
 
     builder.addCase(removeTransaction.fulfilled, (state, action) => {
@@ -101,6 +114,54 @@ const selectTransactions = createSelector(
   s => s.transactions
 );
 
+const getIncomeGroupedTransactions = createSelector(
+  selectTransactions,
+  (transactions): Record<string, TransactionPartial[]> => {
+    return transactions
+      .filter(tx => tx.type === TransactionTypeEnum.INCOME)
+      .reduce(
+        (acc, tx) => {
+          const dateKey = tx.date.split(',')[0];
+          if (!acc[dateKey]) acc[dateKey] = [];
+          acc[dateKey].push(tx);
+          return acc;
+        },
+        {} as Record<string, TransactionPartial[]>
+      );
+  }
+);
+const getExpenseGroupedTransactions = createSelector(
+  selectTransactions,
+  (transactions): Record<string, TransactionPartial[]> => {
+    return transactions
+      .filter(tx => tx.type === TransactionTypeEnum.EXPENSE)
+      .reduce(
+        (acc, tx) => {
+          const dateKey = tx.date.split(',')[0];
+          if (!acc[dateKey]) acc[dateKey] = [];
+          acc[dateKey].push(tx);
+          return acc;
+        },
+        {} as Record<string, TransactionPartial[]>
+      );
+  }
+);
+
+const getGroupedTransactions = createSelector(
+  selectTransactions,
+  (transactions): Record<string, TransactionPartial[]> => {
+    return transactions.reduce(
+      (acc, tx) => {
+        const dateKey = tx.date.split(',')[0];
+        if (!acc[dateKey]) acc[dateKey] = [];
+        acc[dateKey].push(tx);
+        return acc;
+      },
+      {} as Record<string, TransactionPartial[]>
+    );
+  }
+);
+
 const selectTransactionTotalIncome = createSelector(
   selectTransactions,
   transactions =>
@@ -140,6 +201,9 @@ export const transactionStore = {
     selectTransactions,
     selectTransactionTotalIncome,
     selectTransactionTotalExpense,
-    selectTransactionBalance
+    selectTransactionBalance,
+    getGroupedTransactions,
+    getIncomeGroupedTransactions,
+    getExpenseGroupedTransactions
   }
 };

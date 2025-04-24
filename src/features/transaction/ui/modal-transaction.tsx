@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@/shared/ui/button';
+import { DatePicker } from '@/shared/ui/date-picker';
 import {
   Dialog,
   DialogContent,
@@ -38,14 +38,16 @@ const formSchema = z.object({
 });
 
 type ModalTransactionProps = {
-  trigger: () => React.ReactNode;
   transaction?: TransactionPartial;
   type: TransactionType;
+  onClose: () => void;
+  isOpen?: boolean;
 };
 
 export const ModalTransaction = ({
-  trigger,
   transaction,
+  onClose,
+  isOpen,
   type
 }: ModalTransactionProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -57,8 +59,6 @@ export const ModalTransaction = ({
     }
   });
 
-  const [isOpen, setIsOpen] = useState(false);
-
   const { createTransaction } = useCreateTransaction();
   const { updateTransaction } = useUpdateTransaction();
 
@@ -66,16 +66,14 @@ export const ModalTransaction = ({
     if (transaction) {
       const newData = {
         ...data,
-        id: transaction?.id,
-        date: new Date().toLocaleString()
+        id: transaction?.id
       };
       updateTransaction(newData);
     } else {
       createTransaction(data);
       form.reset();
     }
-
-    setIsOpen(false);
+    onClose();
   });
 
   const modalTitle = transaction
@@ -85,13 +83,7 @@ export const ModalTransaction = ({
       : 'Добавить доход';
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger
-        aria-describedby="modal-modal-description"
-        className="w-full"
-      >
-        {trigger()}
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         aria-describedby="modal-modal-description"
         className="sm:max-w-[425px]"
@@ -120,11 +112,22 @@ export const ModalTransaction = ({
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Описание</FormLabel>
+                    <FormLabel>Заметка</FormLabel>
                     <FormControl>
                       <Input placeholder="Добавьте комментарий" {...field} />
                     </FormControl>
 
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Выбрать дату</FormLabel>
+                    <FormControl>{/* <DatePicker {...field} /> */}</FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

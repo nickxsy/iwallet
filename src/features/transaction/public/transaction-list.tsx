@@ -1,54 +1,37 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
 
-import { cn, useAppSelector } from '@/shared/lib';
+import { cn } from '@/shared/lib';
 
-import { TransactionPartial } from '@/entities/transaction';
-import { TransactionTypeEnum } from '@/entities/transaction';
-
-import { getAllTransactions } from '../model/transaction.selectors';
-
-import { TransactionItem } from './transaction-item';
+import {
+  getExpenseGroupedTransactions,
+  getIncomeGroupedTransactions
+} from '../model/transaction.selectors';
+import { TransactionGrouped } from '../ui/transaction-list/transaction-grouped';
 
 type TransactionTabs = {
   trigger: string;
   value: 'all' | 'income' | 'expense';
-  children: (transactions: TransactionPartial[]) => React.ReactNode;
+  selector?: any;
 };
 
 const tabs: TransactionTabs[] = [
   {
     trigger: 'Все',
-    value: 'all',
-    children: transactions =>
-      transactions.map(transaction => (
-        <TransactionItem key={transaction.id} transaction={transaction} />
-      ))
+    value: 'all'
   },
   {
     trigger: 'Доход',
     value: 'income',
-    children: transactions =>
-      transactions
-        .filter(transaction => transaction.type === TransactionTypeEnum.INCOME)
-        .map(transaction => (
-          <TransactionItem key={transaction.id} transaction={transaction} />
-        ))
+    selector: getIncomeGroupedTransactions
   },
   {
     trigger: 'Расход',
     value: 'expense',
-    children: transactions =>
-      transactions
-        .filter(transaction => transaction.type === TransactionTypeEnum.EXPENSE)
-        .map(transaction => (
-          <TransactionItem key={transaction.id} transaction={transaction} />
-        ))
+    selector: getExpenseGroupedTransactions
   }
 ];
 
 export const TransactionList = ({ className }: { className?: string }) => {
-  const transactions = useAppSelector(getAllTransactions);
-
   return (
     <Tabs defaultValue="all" className={cn('w-full', className)}>
       <TabsList className="grid w-full border-b-2 border-b-gray-200 grid-cols-3">
@@ -68,8 +51,9 @@ export const TransactionList = ({ className }: { className?: string }) => {
             className="py-6 gap-2 flex flex-col"
             value={tab.value}
             key={tab.value}
-            children={tab.children(transactions)}
-          />
+          >
+            <TransactionGrouped selector={tab.selector} />
+          </TabsContent>
         ))}
       </>
     </Tabs>
