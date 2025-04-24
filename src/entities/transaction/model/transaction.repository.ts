@@ -20,7 +20,7 @@ class TransactionRepository {
       );
   }
 
-  async addTransaction(data: Transaction) {
+  async saveTransaction(data: Transaction) {
     const transactions = await this.getTransactions();
     const transactionIndex = transactions.findIndex(
       transaction => transaction.id === data.id
