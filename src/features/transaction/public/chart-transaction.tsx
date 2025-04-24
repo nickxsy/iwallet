@@ -1,4 +1,3 @@
-
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts"
 
 import {
@@ -38,10 +37,11 @@ export const ChartTransaction = () =>  {
           className="mx-auto aspect-square w-full max-w-[250px] "
         >
           <RadialBarChart
-            
             data={chartData}
+            endAngle={360}
+            startAngle={0}
             innerRadius={100}
-            outerRadius={130}
+            outerRadius={140}
           >
             <ChartTooltip
               cursor={true}
@@ -55,19 +55,18 @@ export const ChartTransaction = () =>  {
                       <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
                         <tspan
                           x={viewBox.cx}
-                          y={(viewBox.cy || 0) - 0}
+                          y={(viewBox.cy || 0) + 5}
                            className={cn(
-                                    'flex justify-center text-2xl font-bold',
+                                    'flex justify-center text-4xl font-bold',
                                     total > '1' ? 'fill-green-600' : 'fill-red-600',
                                     total === '0.00' && 'fill-foreground'
                                   )}
-                          // className="fill-foreground text-2xl font-bold"
                         >
                           {total}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 20}
+                          y={(viewBox.cy || 0) + 25}
                           className="fill-muted-foreground"
                         >
                           Баланс
@@ -79,19 +78,17 @@ export const ChartTransaction = () =>  {
               />
             </PolarRadiusAxis>
             <RadialBar
-
               dataKey="income"
+               
               stackId="a"
-              cornerRadius={0}
-              // fill="var(--color-chart-5)"
-              className="stroke-transparent stroke-2 fill-green-300"
+              cornerRadius={100}
+              className="stroke-transparent stroke-2 fill-green-600"
             />
             <RadialBar
               dataKey="expense"
-              fill="var(--color-chart-2)"
               stackId="a"
-              cornerRadius={0}
-              className="stroke-transparent stroke-2 fill-red-300"
+              cornerRadius={100}
+              className="stroke-transparent stroke-2 fill-red-600"
             />
           </RadialBarChart>
         </ChartContainer>
