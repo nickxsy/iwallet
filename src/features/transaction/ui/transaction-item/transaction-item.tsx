@@ -1,3 +1,5 @@
+import { useSortable } from '@dnd-kit/sortable';
+
 import { cn } from '@/shared/lib';
 
 import {
@@ -9,12 +11,28 @@ import { EditTransactionButton } from './edit-transaction-button';
 import { RemoveTransactionButton } from './remove-transaction-button';
 
 export const TransactionItem = ({
-  transaction
+  transaction,
+  ...props
 }: {
   transaction: TransactionPartial;
+  id: string;
 }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: props.id });
+
+  const style = {
+    transform: transform
+      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+      : undefined,
+    transition
+  };
+
   return (
     <div
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      style={style}
       className="flex justify-between p-4 rounded-2xl bg-gray-100"
       key={transaction.id}
     >

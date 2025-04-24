@@ -168,6 +168,7 @@ const selectTransactionTotalIncome = createSelector(
     transactions.reduce((acc, curr) => {
       const amount = parseFloat(curr.amount);
       if (curr.type === TransactionTypeEnum.INCOME) return (acc += amount);
+
       return acc;
     }, 0)
 );
