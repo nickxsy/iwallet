@@ -9,7 +9,11 @@ import { createBaseSelector, registerSlice } from '@/shared/lib';
 
 import { TransactionTypeEnum } from './const';
 import { transactionRepository } from './transaction.repository';
-import { CreateTransactionData, TransactionPartial } from './types';
+import {
+  CreateTransactionData,
+  TransactionPartial,
+  UpdateTransactionData
+} from './types';
 
 export type TransactionStore = {
   transactions: TransactionPartial[];
@@ -37,6 +41,14 @@ const transactionSlice = createSlice({
         transaction => transaction.id !== action.payload
       );
     });
+    builder.addCase(updateTransaction.fulfilled, (state, action) => {
+      state.transactions = state.transactions.map(transaction => {
+        if (transaction.id === action.payload.id) {
+          return action.payload;
+        }
+        return transaction;
+      });
+    });
   }
 });
 
@@ -48,6 +60,19 @@ const loadTransaction = createAsyncThunk(
   }
 );
 
+const updateTransaction = createAsyncThunk(
+  'transaction/updateTransaction',
+  async (data: UpdateTransactionData) => {
+    const newTransaction = {
+      ...data,
+      date: new Date().toLocaleString(),
+      id: data.id
+    };
+    await transactionRepository.saveTransaction(newTransaction);
+    return newTransaction;
+  }
+);
+
 const createTransaction = createAsyncThunk(
   'transaction/createTransaction',
   async (data: CreateTransactionData) => {
@@ -56,7 +81,7 @@ const createTransaction = createAsyncThunk(
       date: new Date().toLocaleString(),
       id: nanoid()
     };
-    await transactionRepository.addTransaction(newTransaction);
+    await transactionRepository.saveTransaction(newTransaction);
     return newTransaction;
   }
 );
@@ -108,6 +133,7 @@ export const transactionStore = {
   actions: {
     loadTransaction,
     removeTransaction,
+    updateTransaction,
     createTransaction
   },
   selectors: {

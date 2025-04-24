@@ -5,8 +5,14 @@ import { ModalTransaction } from './modal-transaction';
 export function FooterTransaction() {
   return (
     <div className="sticky flex gap-2 p-2 bottom-0 left-0 w-full">
-      <ModalTransaction trigger={() => <AddTransactionIncomeButton />} />
-      <ModalTransaction trigger={() => <AddTransactionExpenceButton />} />
+      <ModalTransaction
+        type="EXPENSE"
+        trigger={() => <AddTransactionExpenceButton />}
+      />
+      <ModalTransaction
+        type="INCOME"
+        trigger={() => <AddTransactionIncomeButton />}
+      />
     </div>
   );
 }

@@ -18,7 +18,7 @@ export const RemoveTransactionButton = ({
       type="button"
       className="size-10"
       onClick={() => removeTransaction(transaction)}
-      variant="outline"
+      variant="ghost"
     >
       <Trash />
     </Button>

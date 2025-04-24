@@ -1,7 +1,9 @@
 export type {
   Transaction,
   CreateTransactionData,
-  TransactionPartial
+  TransactionPartial,
+  TransactionType,
+  UpdateTransactionData
 } from './model/types';
 
 export { TransactionTypeEnum } from './model/const';

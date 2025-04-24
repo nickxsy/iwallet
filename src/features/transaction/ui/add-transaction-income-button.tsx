@@ -8,7 +8,7 @@ export const AddTransactionIncomeButton = () => {
   return (
     <button className="w-full text-center cursor-pointer  p-3.5 rounded-3xl  bg-gray-50 text-green-600">
       <span className="block">Доход</span>
-      <span className="block w-full">${totalIncome}</span>
+      <span className="block w-full">{totalIncome} руб.</span>
     </button>
   );
 };

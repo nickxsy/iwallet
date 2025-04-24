@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -18,53 +19,89 @@ import {
   FormMessage
 } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
-import { Switch } from '@/shared/ui/switch';
 
-import { TransactionTypeEnum } from '@/entities/transaction';
+import {
+  TransactionPartial,
+  TransactionTypeEnum
+} from '@/entities/transaction';
+import { TransactionType } from '@/entities/transaction';
 
 import { useCreateTransaction } from '../model/hooks/use-create-transaction';
+import { useUpdateTransaction } from '../model/hooks/use-update-transaction';
 
 const formSchema = z.object({
   amount: z.string().min(1, {
     message: 'Сумма обязательна.'
   }),
-  description: z.string().min(1, {
-    message: 'Описание обязательна.'
-  }),
-  type: z.nativeEnum(TransactionTypeEnum)
+  description: z.string(),
+  type: z.enum([TransactionTypeEnum.EXPENSE, TransactionTypeEnum.INCOME])
 });
 
-export const ModalTransaction = ({
-  trigger
-}: {
+type ModalTransactionProps = {
   trigger: () => React.ReactNode;
-}) => {
+  transaction?: TransactionPartial;
+  type: TransactionType;
+};
+
+export const ModalTransaction = ({
+  trigger,
+  transaction,
+  type
+}: ModalTransactionProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      amount: '',
-      description: '',
-      type: TransactionTypeEnum.INCOME
+    values: {
+      amount: transaction?.amount || '',
+      description: transaction?.description || '',
+      type: transaction?.type || type
     }
   });
 
+  const [isOpen, setIsOpen] = useState(false);
+
   const { createTransaction } = useCreateTransaction();
+  const { updateTransaction } = useUpdateTransaction();
 
   const onSubmit = form.handleSubmit(data => {
-    createTransaction(data);
-    form.reset();
+    if (transaction) {
+      const newData = {
+        ...data,
+        id: transaction?.id,
+        date: new Date().toLocaleString()
+      };
+      updateTransaction(newData);
+    } else {
+      createTransaction(data);
+      form.reset();
+    }
+
+    setIsOpen(false);
   });
 
+  const modalTitle = transaction
+    ? 'Редактировать транзакцию'
+    : type === TransactionTypeEnum.EXPENSE
+      ? 'Добавить расход'
+      : 'Добавить доход';
+
   return (
-    <Dialog>
-      <DialogTrigger className="w-full">{trigger()}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger
+        aria-describedby="modal-modal-description"
+        className="w-full"
+      >
+        {trigger()}
+      </DialogTrigger>
+      <DialogContent
+        aria-describedby="modal-modal-description"
+        className="sm:max-w-[425px]"
+      >
         <DialogHeader>
-          <DialogTitle>Начислить доход</DialogTitle>
+          <DialogTitle>{modalTitle}</DialogTitle>
         </DialogHeader>
         <div>
           <FormProvider {...form}>
-            <form {...form} onSubmit={onSubmit} className="space-y-6">
+            <form onSubmit={onSubmit} className="space-y-6">
               <FormField
                 control={form.control}
                 name="amount"
@@ -72,7 +109,7 @@ export const ModalTransaction = ({
                   <FormItem>
                     <FormLabel>Сумма</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="$0.00" {...field} />
+                      <Input type="number" placeholder="0.00 руб." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -92,28 +129,9 @@ export const ModalTransaction = ({
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Type</FormLabel>
-                    <FormControl>
-                      <Switch
-                        checked={field.value === TransactionTypeEnum.INCOME}
-                        onCheckedChange={checked =>
-                          field.onChange(
-                            checked
-                              ? TransactionTypeEnum.INCOME
-                              : TransactionTypeEnum.EXPENSE
-                          )
-                        }
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <Button type="submit">Добавить</Button>
+              <Button type="submit">
+                {transaction ? 'Сохранить' : 'Добавить'}
+              </Button>
             </form>
           </FormProvider>
         </div>
