@@ -11,7 +11,7 @@ export const Header = () => {
         <Link to={ROUTER_PATHS.LOGIN}>Sign in</Link>
       </nav>
       <div className="text-center flex flex-col items-center">
-        <h1 className="text-2xl">wallet+</h1>
+        <h1 className="text-2xl">IWallet</h1>
         <p className="text-sm mt-2 max-w-[300px]">
           Это приложение для отслеживания доходов и расходов
         </p>
