@@ -5,7 +5,7 @@ export type TransactionType =
 
 export type Transaction = {
   id: string;
-  amount: string;
+  amount: number;
   date: string;
   type: TransactionType;
   description?: string;
@@ -13,14 +13,14 @@ export type Transaction = {
 
 export type TransactionPartial = {
   id: string;
-  amount: string;
+  amount: number;
   date: string;
   type: TransactionType;
   description?: string;
 };
 
 export type CreateTransactionData = {
-  amount: string;
+  amount: number;
   date: string;
   type: TransactionType;
   description?: string;
@@ -28,7 +28,7 @@ export type CreateTransactionData = {
 
 export type UpdateTransactionData = {
   id: string;
-  amount: string;
+  amount: number;
   date: string;
   type: TransactionType;
   description?: string;

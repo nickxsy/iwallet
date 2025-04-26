@@ -1,6 +1,8 @@
 import { useSortable } from '@dnd-kit/sortable';
+import { Trash } from 'lucide-react';
 
 import { cn } from '@/shared/lib';
+import { Button } from '@/shared/ui/button';
 
 import {
   type TransactionPartial,
@@ -33,11 +35,11 @@ export const TransactionItem = ({
       {...attributes}
       {...listeners}
       style={style}
-      className="flex justify-between p-4 rounded-2xl bg-gray-100"
+      className="flex justify-between rounded-2xl bg-gray-100 p-4"
       key={transaction.id}
     >
-      <div className="flex gap-2  w-full">
-        <div className="flex flex-col flex-none">
+      <div className="flex w-full gap-2">
+        <div className="flex flex-none flex-col">
           <span
             className={cn(
               'font-bold',
@@ -48,7 +50,7 @@ export const TransactionItem = ({
           >
             <span>
               {transaction.type === TransactionTypeEnum.INCOME ? '+' : '-'}
-              {transaction.amount} руб.
+              {transaction.amount} ₽
             </span>
           </span>
           <span className="text-xs font-semibold">
@@ -57,14 +59,18 @@ export const TransactionItem = ({
               : 'Расход'}
           </span>
         </div>
-        <p className="text-sm truncate text-ellipsis">
+        <p className="truncate text-sm text-ellipsis">
           {transaction.description}
         </p>
       </div>
 
-      <div className="flex gap-2 flex-none">
+      <div className="flex flex-none gap-2">
         <EditTransactionButton transaction={transaction} />
-        <RemoveTransactionButton transaction={transaction} />
+        <RemoveTransactionButton asChild transaction={transaction}>
+          <Button className="size-10" variant="ghost">
+            <Trash />
+          </Button>
+        </RemoveTransactionButton>
       </div>
     </div>
   );

@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -18,6 +19,7 @@
     "@radix-ui/react-dialog": "^1.1.11",
     "@radix-ui/react-label": "^2.1.4",
     "@radix-ui/react-popover": "^1.1.11",
+    "@radix-ui/react-scroll-area": "^1.2.6",
     "@radix-ui/react-select": "^2.2.2",
     "@radix-ui/react-slot": "^1.2.0",
     "@radix-ui/react-switch": "^1.2.2",
@@ -36,6 +38,7 @@
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.55.0",
     "react-redux": "^9.2.0",
+    "react-resizable-panels": "^2.1.8",
     "react-router": "^7.5.1",
     "recharts": "^2.15.3",
     "tailwind-merge": "^3.2.0",
@@ -44,6 +47,12 @@
     "y-webrtc": "^10.3.0",
     "yjs": "^13.6.26",
     "zod": "^3.24.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
@@ -57,7 +66,9 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
+    "lint-staged": "^15.5.1",
     "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0"

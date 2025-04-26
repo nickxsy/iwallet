@@ -13,7 +13,7 @@ export const AddTransactionIncomeButton = () => {
   return (
     <Button
       onClick={() => dispatch(openModal({ type: TransactionTypeEnum.INCOME }))}
-      className="flex-1 h-[52px] rounded-full"
+      className="h-[52px] flex-1 rounded-full"
     >
       Доход
     </Button>

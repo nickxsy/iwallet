@@ -58,11 +58,11 @@ export const ChartTransaction = () =>  {
                           y={(viewBox.cy || 0) + 5}
                            className={cn(
                                     'flex justify-center text-4xl font-bold',
-                                    total > '1' ? 'fill-green-600' : 'fill-red-600',
-                                    total === '0.00' && 'fill-foreground'
+                                    total > 1 ? 'fill-green-600' : 'fill-red-600',
+                                    total === 0 && 'fill-foreground'
                                   )}
                         >
-                          {total}
+                          {total} ₽
                         </tspan>
                         <tspan
                           x={viewBox.cx}

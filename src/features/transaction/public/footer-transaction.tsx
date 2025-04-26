@@ -1,9 +1,16 @@
+import { cn } from '@/shared/lib';
+
 import { AddTransactionExpenceButton } from '../ui/transaction-footer/add-transaction-expense-button';
 import { AddTransactionIncomeButton } from '../ui/transaction-footer/add-transaction-income-button';
 
-export function FooterTransaction() {
+export function FooterTransaction({ className }: { className?: string }) {
   return (
-    <div className="sticky flex gap-2 p-2 bottom-0 left-0 w-full">
+    <div
+      className={cn(
+        'absolute bottom-0 left-0 flex w-full gap-2 p-2',
+        className
+      )}
+    >
       <AddTransactionExpenceButton />
       <AddTransactionIncomeButton />
     </div>

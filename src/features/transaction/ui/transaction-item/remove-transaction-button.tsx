@@ -1,26 +1,33 @@
-import { Trash } from 'lucide-react';
+import { Slot } from '@radix-ui/react-slot';
 
-import { Button } from '@/shared/ui/button';
+import { cn } from '@/shared/lib';
 
 import { TransactionPartial } from '@/entities/transaction';
 
 import { useRemoveTransaction } from '../../model/hooks/use-remove-transaction';
 
 export const RemoveTransactionButton = ({
-  transaction
+  children,
+  asChild = false,
+  transaction,
+  className
 }: {
+  children?: React.ReactNode;
   transaction: TransactionPartial;
+  asChild?: boolean;
+  className?: string;
 }) => {
   const removeTransaction = useRemoveTransaction();
 
+  const Comp = asChild ? Slot : 'button';
+
   return (
-    <Button
+    <Comp
       type="button"
-      className="size-10"
+      className={cn(className)}
       onClick={() => removeTransaction(transaction)}
-      variant="ghost"
     >
-      <Trash />
-    </Button>
+      {children}
+    </Comp>
   );
 };

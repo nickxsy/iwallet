@@ -29,6 +29,8 @@ import { TransactionType } from '@/entities/transaction';
 import { useCreateTransaction } from '../model/hooks/use-create-transaction';
 import { useUpdateTransaction } from '../model/hooks/use-update-transaction';
 
+import { RemoveTransactionButton } from './transaction-item/remove-transaction-button';
+
 const formSchema = z.object({
   amount: z.string().min(1, {
     message: 'Сумма обязательна.'
@@ -53,7 +55,7 @@ export const ModalTransaction = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     values: {
-      amount: transaction?.amount || '',
+      amount: String(transaction?.amount) || '',
       description: transaction?.description || '',
       type: transaction?.type || type
     }
@@ -93,7 +95,7 @@ export const ModalTransaction = ({
         </DialogHeader>
         <div>
           <FormProvider {...form}>
-            <form onSubmit={onSubmit} className="space-y-6">
+            <form onSubmit={onSubmit} className="flex flex-col gap-5">
               <FormField
                 control={form.control}
                 name="amount"
@@ -101,7 +103,12 @@ export const ModalTransaction = ({
                   <FormItem>
                     <FormLabel>Сумма</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="0.00 руб." {...field} />
+                      <Input
+                        type="number"
+                        min={0}
+                        placeholder="0.00 руб."
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -127,14 +134,36 @@ export const ModalTransaction = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Выбрать дату</FormLabel>
-                    <FormControl>{/* <DatePicker {...field} /> */}</FormControl>
+                    <FormControl>
+                      <DatePicker />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit">
-                {transaction ? 'Сохранить' : 'Добавить'}
-              </Button>
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Выбрать дату</FormLabel>
+                    <FormControl>
+                      <DatePicker />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex gap-2">
+                <Button type="submit">
+                  {transaction ? 'Сохранить' : 'Добавить'}
+                </Button>
+                {transaction && (
+                  <RemoveTransactionButton asChild transaction={transaction}>
+                    <Button onClick={onClose}>Удалить</Button>
+                  </RemoveTransactionButton>
+                )}
+              </div>
             </form>
           </FormProvider>
         </div>

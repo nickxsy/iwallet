@@ -69,6 +69,7 @@ export const TransactionGrouped = ({
       };
     });
   }
+
   return (
     <DndContext
       sensors={sensors}
@@ -76,24 +77,30 @@ export const TransactionGrouped = ({
       onDragEnd={handleDragEnd}
     >
       <div className="flex flex-col gap-6">
-        {Object.entries(content).map(([date, transactions]) => (
-          <div key={date}>
-            <h3 className="font-bold mb-2">{date}</h3>
-            <div className="flex flex-col gap-2">
-              <SortableContext
-                items={items[date] ?? []}
-                strategy={verticalListSortingStrategy}
-              >
-                {items[date]?.map(id => {
-                  const tx = transactions.find(t => t.id === id);
-                  return tx ? (
-                    <TransactionItem id={id} key={tx.id} transaction={tx} />
-                  ) : null;
-                })}
-              </SortableContext>
+        {Object.entries(content)
+          .sort((x, y) => {
+            console.log(x[0], y[0]);
+            return x[0];
+          })
+          .map(([date, transactions]) => (
+            <div key={date}>
+              <h3 className="mb-2 font-bold">{date}</h3>
+              <div className="flex flex-col gap-2">
+                <SortableContext
+                  disabled
+                  items={items[date] ?? []}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {items[date]?.map(id => {
+                    const tx = transactions.find(t => t.id === id);
+                    return tx ? (
+                      <TransactionItem id={id} key={tx.id} transaction={tx} />
+                    ) : null;
+                  })}
+                </SortableContext>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </DndContext>
   );
