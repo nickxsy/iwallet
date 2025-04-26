@@ -3,7 +3,9 @@ export default {
   extends: ['@commitlint/config-conventional'],
   rules: {},
   prompt: {
-    settings: {},
+    settings: {
+      emoji: true
+    },
     messages: {
       skip: ':skip',
       max: 'upper %d chars',
