@@ -1,9 +1,15 @@
+import { persistStorage } from '@/shared/lib';
+
+import { Category } from './types';
+
+const CATEGORY_STORAGE_KEY = 'Category_key';
+
 class CategoryRepository {
-  async loadCategories() {
-    return [];
+  async loadCategories(): Promise<Category[]> {
+    return persistStorage.getItemSafe<Category[]>(CATEGORY_STORAGE_KEY, []);
   }
-  async addCategory() {}
-  async removeCategory() {}
+  async saveCategory() {}
+  async removeCategory(id: string) {}
   async updateCategory() {}
   async getCategoryById() {}
 }

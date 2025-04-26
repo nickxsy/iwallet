@@ -1,15 +1,23 @@
+import { Slot } from '@radix-ui/react-slot';
+
 import { cn } from '../lib';
 
 export const Container = ({
-  children,
-  className
-}: {
+  className,
+  asChild = false,
+  ...props
+}: React.ComponentProps<'div'> & {
   children: React.ReactNode;
   className?: string;
+  asChild?: boolean;
 }) => {
+  const Comp = asChild ? Slot : 'div';
+
   return (
-    <div className={cn('container mx-auto max-w-[420px] px-4', className)}>
-      {children}
-    </div>
+    <Comp
+      data-slot="container"
+      className={cn('container mx-auto max-w-[420px] px-4', className)}
+      {...props}
+    />
   );
 };

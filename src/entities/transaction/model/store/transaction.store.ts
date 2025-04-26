@@ -130,6 +130,7 @@ const getIncomeGroupedTransactions = createSelector(
       );
   }
 );
+
 const getExpenseGroupedTransactions = createSelector(
   selectTransactions,
   (transactions): Record<string, TransactionPartial[]> => {
@@ -166,8 +167,10 @@ const selectTransactionTotalIncome = createSelector(
   selectTransactions,
   transactions =>
     transactions.reduce((acc, curr) => {
-      const amount = parseFloat(curr.amount);
+      const amount = Number(curr.amount);
+
       if (curr.type === TransactionTypeEnum.INCOME) return (acc += amount);
+
       return acc;
     }, 0)
 );
@@ -176,7 +179,8 @@ const selectTransactionTotalExpense = createSelector(
   selectTransactions,
   transactions =>
     transactions.reduce((acc, curr) => {
-      const amount = parseFloat(curr.amount);
+      const amount = Number(curr.amount);
+
       if (curr.type === TransactionTypeEnum.EXPENSE) return (acc += amount);
       return acc;
     }, 0)
@@ -185,7 +189,7 @@ const selectTransactionTotalExpense = createSelector(
 const selectTransactionBalance = createSelector(
   selectTransactionTotalIncome,
   selectTransactionTotalExpense,
-  (income, expense) => (income - expense).toFixed(2)
+  (income, expense) => income - expense
 );
 
 registerSlice([transactionSlice]);

@@ -7,13 +7,13 @@ export const getAllTransactions =
   transactionStore.selectors.selectTransactions ?? [];
 
 export const getTransactionTotalBalance =
-  transactionStore.selectors.selectTransactionBalance ?? 0;
+  transactionStore.selectors.selectTransactionBalance;
 
 export const getTransactionTotalIncome =
-  transactionStore.selectors.selectTransactionTotalIncome ?? 0;
+  transactionStore.selectors.selectTransactionTotalIncome;
 
 export const getTransactionTotalExpense =
-  transactionStore.selectors.selectTransactionTotalExpense ?? 0;
+  transactionStore.selectors.selectTransactionTotalExpense;
 
 export const getGroupedTransactions =
   transactionStore.selectors.getGroupedTransactions ?? [];

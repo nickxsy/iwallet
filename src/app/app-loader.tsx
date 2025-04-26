@@ -26,7 +26,7 @@ export const AppLoader = ({ children }: { children?: React.ReactNode }) => {
 
   if (isLoading) {
     return (
-      <div className="fixed top-0 left-0 right-0 bottom-0 w-full h-full flex justify-center items-center">
+      <div className="fixed top-0 right-0 bottom-0 left-0 flex h-full w-full items-center justify-center">
         <Spinner />
       </div>
     );
